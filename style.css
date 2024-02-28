@@ -1,0 +1,88 @@
+    /*general*/
+
+
+    @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
+    *{
+        margin: 0;
+        padding: 0;
+
+    }
+
+    body{
+    // <uniquifier>: Use a unique and descriptive class name
+    // <weight>: Use a value from 100 to 900
+        .raleway-<uniquifier> {
+            font-family: "Raleway", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: normal;
+            font-style: normal;
+
+        }
+    }
+
+    html{
+        scroll-behavior: smooth;
+    }
+
+    p{
+        color: rgb(85, 85, 85);
+    }
+
+    /*Transition*/
+
+    a,
+    .btn{
+        transition: all 300ms ease;
+    }
+
+    /*Desktop Nav*/
+
+    nav, nav-links{
+        display: flex;
+    }
+
+    nav ul li{
+        display: inline-block;
+        list-style: none;
+        margin: 10px 20px;
+
+    }
+
+    nav{
+        justify-content: space-around;
+        align-items: center;
+        height: 17vh;
+    }
+
+    .nav-links{
+        gap: 2rem;
+        list-style:none;
+        font-size: 1.5rem;
+    }
+
+    a {
+        color: black;
+        text-decoration: none;
+        text-decoration-color: white;
+    }
+
+    a:hover{
+        text-decoration: underline;
+        text-decoration-color: mediumpurple;
+        text-underline-offset: 1rem ;
+
+    }
+
+    .logo-link{
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .logo-link:hover{
+        text-decoration: none;
+        color: inherit;
+
+    }
