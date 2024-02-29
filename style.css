@@ -71,7 +71,7 @@
 
     a:hover{
         text-decoration: underline;
-        text-decoration-color: mediumpurple;
+        text-decoration-color: rgb(155, 131, 205);
         text-underline-offset: 1rem ;
 
     }
