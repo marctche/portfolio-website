@@ -469,7 +469,7 @@ export const about: {
   contactLine: "Send it over, I read everything.",
 };
 
-type PageHead = { eyebrow: string; title: string; intro: string };
+type PageHead = { title: string; intro: string };
 
 /** Section headers for each page. */
 export const pages: {
@@ -479,24 +479,20 @@ export const pages: {
   elsewhere: PageHead;
 } = {
   projects: {
-    eyebrow: "PROJECTS",
     title: "some things i've made.",
     intro:
       "some for school, some for fun, and a couple because i couldn't stop thinking about the idea.",
   },
   experience: {
-    eyebrow: "EXPERIENCE",
     title: "different jobs, different angles.",
     intro:
       "software, quality, infrastructure and consulting: each one a different way of looking at the same problem.",
   },
   about: {
-    eyebrow: "ABOUT",
     title: "a little more about me.",
     intro: "",
   },
   elsewhere: {
-    eyebrow: "ELSEWHERE",
     title: "nothing here yet.",
     intro: "this part of the site is intentionally empty for now.",
   },

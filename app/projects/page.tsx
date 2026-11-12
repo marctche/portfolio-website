@@ -23,7 +23,7 @@ export default function Projects() {
       cells: {
         thing: (
           <Link className="display-name" href={`/projects/${p.slug}`}>
-            {p.name} ↗
+            {p.name}{"\u00a0"}↗
           </Link>
         ),
         stack: <StackIcons items={p.stack} size="sm" />,

@@ -54,10 +54,12 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 - `/` — home. A centred hero filling the viewport: the greeting, then `TypedLine`, which
   starts on `home.lines[0]` and types through the rest. Then four `Tile`s: projects,
   experience, about, elsewhere. No footer.
-- `/projects` — `IndexTable` of all public projects (`# · THING · STACK · YEAR · IN ONE
+- `/projects` — fits one desktop screen (1280×800 and up). `IndexTable` of all public projects (`# · THING · STACK · YEAR · IN ONE
   SENTENCE`). Every name links to its own detail page, never straight to a repo or demo.
 - `/projects/[slug]` — a page for every public project (`generateStaticParams`). Any other slug
-  calls `notFound()`. Uses `FeatureLayout`; beats without copy are skipped. The left column
+  calls `notFound()`. On desktop (≥801px) the page is exactly one screen: `body:has(.section-flush)`
+  is locked to `100dvh`, and if the copy is taller the text column (`.feature-body`) scrolls on
+  its own. Phones scroll normally. Uses `FeatureLayout`; beats without copy are skipped. The left column
   stacks the name (with the stack as `StackIcons`) and, straight under it, a blue box that fills
   the rest of the column with the GitHub / live site links (or
   "nothing public"), so the links are in the first screen (`FeatureLayout`'s `side` prop).
@@ -65,15 +67,18 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
   previous / next nav under the body. Then
   `SiteFooter`, with no gap (`.section-flush`).
 - `/experience` — `SectionHead` plus four `ExperienceBlock`s (work, pro bono, involvement, hacks).
+  Each entry shows its one-liner; its `body` paragraphs sit behind a native `<details>`
+  "+ more" toggle, so pro bono shows on the first screen.
   YSB appears only in the body of the Accenture OCCP pro bono entry, never as a row or headline.
 - `/about` — `SectionHead`, lead paragraphs, a facts row, and the contact `BlueFooter`.
 - `/elsewhere` — intentionally empty: a heading and one line. Don't add content.
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
-`BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead`, `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
-(detail page shell), `ExperienceBlock`, `StackIcons` (a stack as monochrome logos; names with no logo, such as AWS
-Lambda, Recharts and API-Football, fall back to small text; add new stack names to its
-`ICONS` map), `TypedLine` (the hero's typed line). All are server
+`BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead` (title + intro only; the tabs have no eyebrow label), `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
+(detail page shell), `ExperienceBlock`, `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
+simple-icons paths in their brand hex for the few devicon lacks; names with no logo, such as AWS
+Lambda, Recharts and API-Football, fall back to small text; add new stack names to its `ICONS`
+map), `TypedLine` (the hero's typed line). All are server
 components except `TypedLine`. It retypes only the words that differ between consecutive
 lines (a word-level LCS), reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
@@ -107,8 +112,8 @@ line, which stays still under reduced motion.
 
 ### Dependencies
 
-Runtime dependencies are `next`, `react`, `react-dom` and `simple-icons` (logo SVG paths for
-`StackIcons`, no runtime cost: the pages are server-rendered). Marc plans to add React Bits
+Runtime dependencies are `next`, `react`, `react-dom` and `simple-icons` (logo paths for the
+few `StackIcons` that devicon lacks, no runtime cost: the pages are server-rendered). Marc plans to add React Bits
 components per project later; until then, don't add motion or styling libraries.
 
 ## Reference material

@@ -36,11 +36,20 @@ export default function ExperienceBlock({
             </div>
             <div>
               <p>{e.line}</p>
-              {e.body?.map((b, i) => (
-                <p className="body" key={i}>
-                  {b}
-                </p>
-              ))}
+              {e.body?.length ? (
+                // Native disclosure: the one-liner shows, the paragraphs open on demand.
+                <details className="exp-more">
+                  <summary>
+                    <span className="when-closed">+ more</span>
+                    <span className="when-open">− less</span>
+                  </summary>
+                  {e.body.map((b, i) => (
+                    <p className="body" key={i}>
+                      {b}
+                    </p>
+                  ))}
+                </details>
+              ) : null}
             </div>
           </div>
         ))}
