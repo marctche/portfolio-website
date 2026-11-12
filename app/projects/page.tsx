@@ -1,0 +1,47 @@
+import Link from "next/link";
+import BackLink from "@/components/BackLink";
+import IndexTable from "@/components/IndexTable";
+import SectionHead from "@/components/SectionHead";
+import SiteFooter from "@/components/SiteFooter";
+import { pages, projects } from "@/lib/content";
+
+export const metadata = { title: "projects" };
+
+const columns = [
+  { key: "n", label: "#" },
+  { key: "thing", label: "THING" },
+  { key: "stack", label: "STACK" },
+  { key: "year", label: "YEAR" },
+  { key: "line", label: "IN ONE SENTENCE" },
+];
+
+export default function Projects() {
+  const rows = projects
+    .filter((p) => p.status === "public")
+    .map((p) => ({
+      cells: {
+        thing: (
+          <Link className="display-name" href={`/projects/${p.slug}`}>
+            {p.name} ↗
+          </Link>
+        ),
+        stack: p.stack.join(", "),
+        year: p.year,
+        line: p.oneLiner,
+      },
+    }));
+
+  return (
+    <>
+      <main id="content">
+        <section className="section">
+          <BackLink href="/" label="home" />
+          <SectionHead {...pages.projects} />
+          <IndexTable ariaLabel="projects" columns={columns} rows={rows} />
+          <p className="note">a selected list, not an attempt to fit everything onto one page.</p>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
