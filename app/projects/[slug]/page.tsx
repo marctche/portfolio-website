@@ -4,6 +4,7 @@ import BackLink from "@/components/BackLink";
 import type { FooterLink } from "@/components/BlueFooter";
 import FeatureLayout from "@/components/FeatureLayout";
 import SiteFooter from "@/components/SiteFooter";
+import StackIcons from "@/components/StackIcons";
 import { projectLinks, projects } from "@/lib/content";
 
 /** Every public project has a page, in table order. */
@@ -71,7 +72,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <FeatureLayout
             kicker={kicker}
             name={name}
-            stackLine={stack.join(" / ").toUpperCase()}
+            stackLine={<StackIcons items={stack} />}
             side={linksBox}
           >
             <p className="lead">{detail.lead}</p>

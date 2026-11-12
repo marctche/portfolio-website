@@ -315,7 +315,7 @@ export const projects: Project[] = [
     links: {},
     stack: ["Java", "Android"],
     role: "team member",
-    status: "public",
+    status: "draft",
     notes:
       "Repo not confirmed. Marc's exact role also unconfirmed, so MY PART stays general.",
     detail: {
@@ -338,7 +338,7 @@ export const projects: Project[] = [
     links: {},
     stack: ["Next.js", "Tailwind"],
     role: "solo: everything",
-    status: "public",
+    status: "draft",
     notes:
       "Unconfirmed: real client, live URL, year. The page stays short until Marc confirms them.",
     detail: {

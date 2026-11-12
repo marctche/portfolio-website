@@ -9,7 +9,8 @@ export default function FeatureLayout({
 }: {
   kicker: string;
   name: string;
-  stackLine: string;
+  /** The stack row under the name (StackIcons). */
+  stackLine: ReactNode;
   /** Sits in the left column, straight under the name (the project links box). */
   side?: ReactNode;
   children: ReactNode;
@@ -20,7 +21,7 @@ export default function FeatureLayout({
         <div className="feature-name">
           <span className="kicker">{kicker}</span>
           <h1>{name.toLowerCase()}</h1>
-          <span className="kicker">{stackLine}</span>
+          {stackLine}
         </div>
         {side}
       </div>

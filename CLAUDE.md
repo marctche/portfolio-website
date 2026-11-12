@@ -58,7 +58,8 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
   SENTENCE`). Every name links to its own detail page, never straight to a repo or demo.
 - `/projects/[slug]` — a page for every public project (`generateStaticParams`). Any other slug
   calls `notFound()`. Uses `FeatureLayout`; beats without copy are skipped. The left column
-  stacks the name and, straight under it, a blue box with the GitHub / live site links (or
+  stacks the name (with the stack as `StackIcons`) and, straight under it, a blue box that fills
+  the rest of the column with the GitHub / live site links (or
   "nothing public"), so the links are in the first screen (`FeatureLayout`'s `side` prop).
   Under it, one last row on the same two columns (`.proj-foot`): an empty cell, and the
   previous / next nav under the body. Then
@@ -70,7 +71,9 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
 `BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead`, `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
-(detail page shell), `ExperienceBlock`, `TypedLine` (the hero's typed line). All are server
+(detail page shell), `ExperienceBlock`, `StackIcons` (a stack as monochrome logos; names with no logo, such as AWS
+Lambda, Recharts and API-Football, fall back to small text; add new stack names to its
+`ICONS` map), `TypedLine` (the hero's typed line). All are server
 components except `TypedLine`. It retypes only the words that differ between consecutive
 lines (a word-level LCS), reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
@@ -104,9 +107,9 @@ line, which stays still under reduced motion.
 
 ### Dependencies
 
-Runtime dependencies are `next`, `react` and `react-dom` only. The unused motion and layout
-libraries have been removed. Don't add motion or styling libraries without a direction that
-asks for them.
+Runtime dependencies are `next`, `react`, `react-dom` and `simple-icons` (logo SVG paths for
+`StackIcons`, no runtime cost: the pages are server-rendered). Marc plans to add React Bits
+components per project later; until then, don't add motion or styling libraries.
 
 ## Reference material
 

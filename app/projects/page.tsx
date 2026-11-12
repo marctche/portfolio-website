@@ -3,6 +3,7 @@ import BackLink from "@/components/BackLink";
 import IndexTable from "@/components/IndexTable";
 import SectionHead from "@/components/SectionHead";
 import SiteFooter from "@/components/SiteFooter";
+import StackIcons from "@/components/StackIcons";
 import { pages, projects } from "@/lib/content";
 
 export const metadata = { title: "projects" };
@@ -25,7 +26,7 @@ export default function Projects() {
             {p.name} ↗
           </Link>
         ),
-        stack: p.stack.join(", "),
+        stack: <StackIcons items={p.stack} size="sm" />,
         year: p.year,
         line: p.oneLiner,
       },

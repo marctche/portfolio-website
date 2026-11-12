@@ -455,6 +455,39 @@
   line-height: 1.3;
   text-transform: uppercase;
 }
+/* A project's stack as logos (StackIcons): ink, no colour, names on hover.
+   Stack names with no logo fall back to small uppercase text. */
+.stack-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.stack-icons li {
+  display: flex;
+  align-items: center;
+}
+.stack-icons svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.stack-icons-sm {
+  gap: 10px;
+}
+.stack-icons-sm svg {
+  width: 17px;
+  height: 17px;
+}
+.stack-text {
+  font-size: 11px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 .note {
   margin: 20px 0 0;
   font-size: 12px;
@@ -523,6 +556,10 @@
   padding: 16px 28px 30px var(--gutter);
   background: var(--color-blue);
   color: #fff;
+}
+.feature-side .proj-links {
+  flex: 1;
+  justify-content: flex-start;
 }
 .proj-links .contact-empty {
   margin: 0;
