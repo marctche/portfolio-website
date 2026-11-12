@@ -55,7 +55,7 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
   starts on `home.lines[0]` and types through the rest. Then four `Tile`s: projects,
   experience, about, elsewhere. No footer.
 - `/projects` — fits one desktop screen (1280×800 and up). `IndexTable` of all public projects (`# · THING · STACK · YEAR · IN ONE
-  SENTENCE`). Every name links to its own detail page, never straight to a repo or demo.
+  SENTENCE`). Every name links to its own detail page, never straight to a repo or demo. No note and no footer: the page ends on the table.
 - `/projects/[slug]` — a page for every public project (`generateStaticParams`). Any other slug
   calls `notFound()`. On desktop (≥801px) the page is exactly one screen: `body:has(.section-flush)`
   is locked to `100dvh`, and if the copy is taller the text column (`.feature-body`) scrolls on
@@ -74,13 +74,16 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 - `/elsewhere` — intentionally empty: a heading and one line. Don't add content.
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
-`BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead` (title + intro only; the tabs have no eyebrow label), `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
+`BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead` (title + intro in the right two-thirds, left third empty; the tabs have no eyebrow label), `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
 (detail page shell), `ExperienceBlock`, `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
 simple-icons paths in their brand hex for the few devicon lacks; names with no logo, such as AWS
 Lambda, Recharts and API-Football, fall back to small text; add new stack names to its `ICONS`
 map), `TypedLine` (the hero's typed line). All are server
 components except `TypedLine`. It retypes only the words that differ between consecutive
-lines (a word-level LCS), reserves the height of the longest line so nothing moves, stays
+lines (a word-level LCS), backspacing them. `home.lineLink` turns one word of one line into a
+link once that line is typed ("projects" → `/projects`); that line holds longer, the loop waits
+while it's hovered, and it leaves with a select-and-delete (highlight, then gone at once). It
+reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
 
 `app/layout.tsx` holds metadata only (title template `%s · Marc Tchetchenigbo`). Each page

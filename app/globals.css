@@ -142,6 +142,35 @@
   background: currentColor;
 }
 
+/* Select-and-delete: the words about to go, highlighted like a text selection. */
+.typed-sel {
+  background: var(--color-blue);
+  color: var(--color-paper);
+}
+/* The link word on the "check out my projects" line: its underline draws in once typed. */
+.typed-link {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 0.06em no-repeat;
+  animation: typed-link-in 520ms ease-out 120ms forwards;
+}
+.typed-link:hover {
+  color: var(--color-blue);
+}
+@keyframes typed-link-in {
+  to {
+    background-size: 100% 0.06em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typed-link {
+    animation: none;
+    background-size: 100% 0.06em;
+  }
+}
+/* A run of "!!!!" is one unbreakable word; let it wrap on narrow screens. */
+.typed {
+  overflow-wrap: anywhere;
+}
+
 /* Tiles: 4-up hero footer, hairline rights, 2x2 on mobile. */
 .tiles {
   border-top: 1px solid var(--color-line);
@@ -180,9 +209,14 @@
 .section {
   padding: 14px var(--gutter) 32px;
 }
-/* SectionHead: title + intro, from the gutter. */
+/* SectionHead: title + intro in the right two-thirds; the left third stays empty. */
 .section-top {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   margin-bottom: 28px;
+}
+.section-top > div {
+  grid-column: 2;
 }
 .eyebrow {
   font-size: 12px;
@@ -379,6 +413,9 @@
     grid-template-columns: 1fr;
     gap: 25px;
     margin-bottom: 45px;
+  }
+  .section-top > div {
+    grid-column: auto;
   }
   .display-title {
     font-size: 49px;

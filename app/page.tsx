@@ -9,7 +9,7 @@ export default function Home() {
         <div className="hero-core">
           <div className="hero-copy">
             <h1 className="display-hero">{home.greeting}</h1>
-            <TypedLine className="display-hero" lines={home.lines} />
+            <TypedLine className="display-hero" lines={home.lines} link={home.lineLink} />
           </div>
         </div>
         <div className="tiles">

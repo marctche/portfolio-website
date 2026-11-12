@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The home hero's second line. It renders `lines[0]`, then, a couple of seconds apart,
- * backspaces and retypes only the words that differ from the next line, and loops.
+ * backspaces and retypes only the words that differ from the next line, and loops. Leaving
+ * the link's line is a select-and-delete instead: its words get highlighted as if dragged
+ * across, vanish at once, and the next line types in.
+ * - `link`: once its line is fully typed, its word turns into a link (underline draws in).
+ *   That line holds longer, and the loop waits while the pointer is on the link.
  *
  * - No JS, reduced motion: `lines[0]`, still. Screen readers always get `lines[0]`.
  * - Every line also sits invisibly in one grid cell, so the box is always as tall as the
@@ -15,13 +20,18 @@ import { useEffect, useState } from "react";
 
 const FIRST_HOLD = 1800; // ms on the first line before anything moves
 const HOLD = 1800; // ms on each line once it's finished
-const ARRIVE = 420; // the caret sits at the edit point before it starts deleting
+const LINK_HOLD = 4200; // ms on the line with the link
+const ARRIVE = 420; // the caret sits at the edit point before it starts selecting
+const SELECT = 14; // per character, as the selection grows backwards
+const SELECTED = 420; // the selection holds before it's deleted
 const BETWEEN = 260; // between deleting and typing, and between two edits
-const DELETE = 28; // per character
+const DELETE = 28; // per character, backspacing
 const TYPE = 55; // per character, plus up to TYPE_JITTER
 const TYPE_JITTER = 45;
 
-type View = { head: string; tail: string; caret: boolean };
+/** On screen: head, the caret, the selected text (if any), tail. */
+type View = { head: string; sel: string; tail: string; caret: boolean };
+type LineLink = { line: number; word: string; href: string };
 type Step = View & { wait: number };
 /** Turn `from` into `to`, with `before` and `after` on either side. */
 type Edit = { before: string; from: string; to: string; after: string };
@@ -104,21 +114,34 @@ function edits(a: string, b: string): Edit[] {
   return (tooLong && peak(rtl) < peak(ltr) ? rtl : ltr).map(keepSharedSpace);
 }
 
-/** Every frame from `a` to `b`, ending on `b` with the caret gone. */
-function steps(a: string, b: string): Step[] {
+/**
+ * Every frame from `a` to `b`, ending on `b` with the caret gone and held for `hold`.
+ * `select`: remove the old words with a select-and-delete instead of backspacing.
+ */
+function steps(a: string, b: string, hold: number, select: boolean): Step[] {
   const out: Step[] = [];
   const pause = (wait: number) => {
     out[out.length - 1].wait = wait;
   };
   for (const { before, from, to, after } of edits(a, b)) {
-    out.push({ head: before + from, tail: after, caret: true, wait: ARRIVE });
-    for (let k = from.length - 1; k >= 0; k--) {
-      out.push({ head: before + from.slice(0, k), tail: after, caret: true, wait: DELETE });
+    out.push({ head: before + from, sel: "", tail: after, caret: true, wait: ARRIVE });
+    if (from && !select) {
+      for (let k = from.length - 1; k >= 0; k--) {
+        out.push({ head: before + from.slice(0, k), sel: "", tail: after, caret: true, wait: DELETE });
+      }
+      pause(BETWEEN);
+    } else if (from) {
+      // Select backwards, a character at a time, like a quick drag; hold; delete it all.
+      for (let k = from.length - 1; k >= 0; k--) {
+        out.push({ head: before + from.slice(0, k), sel: from.slice(k), tail: after, caret: true, wait: SELECT });
+      }
+      pause(SELECTED);
+      out.push({ head: before, sel: "", tail: after, caret: true, wait: BETWEEN });
     }
-    if (from) pause(BETWEEN);
     for (let k = 1; k <= to.length; k++) {
       out.push({
         head: before + to.slice(0, k),
+        sel: "",
         tail: after,
         caret: true,
         wait: TYPE + Math.random() * TYPE_JITTER,
@@ -126,23 +149,43 @@ function steps(a: string, b: string): Step[] {
     }
     pause(BETWEEN);
   }
-  out.push({ head: b, tail: "", caret: false, wait: HOLD });
+  out.push({ head: b, sel: "", tail: "", caret: false, wait: hold });
   return out;
+}
+
+/** `line` with `link.word` as a link, if this is the link's line. */
+function withLink(line: string, link: LineLink | undefined, lines: string[]) {
+  if (!link || line !== lines[link.line]) return line;
+  const at = line.indexOf(link.word);
+  if (at < 0) return line;
+  return (
+    <>
+      {line.slice(0, at)}
+      {/* Out of the tab order: the hero is aria-hidden, and the projects tile is right below. */}
+      <Link className="typed-link" href={link.href} tabIndex={-1}>
+        {link.word}
+      </Link>
+      {line.slice(at + link.word.length)}
+    </>
+  );
 }
 
 export default function TypedLine({
   lines,
+  link,
   className,
 }: {
   lines: [string, ...string[]];
+  link?: LineLink;
   className?: string;
 }) {
-  const [view, setView] = useState<View>({ head: lines[0], tail: "", caret: false });
+  const [view, setView] = useState<View>({ head: lines[0], sel: "", tail: "", caret: false });
+  const hovering = useRef(false);
 
   useEffect(() => {
-    const rest: View = { head: lines[0], tail: "", caret: false };
+    const rest: View = { head: lines[0], sel: "", tail: "", caret: false };
     // Start from the default line, even if the lines changed mid-edit.
-    setView((v) => (v.head === rest.head && !v.tail && !v.caret ? v : rest));
+    setView((v) => (v.head === rest.head && !v.sel && !v.tail && !v.caret ? v : rest));
 
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (lines.length < 2 || calm.matches) return;
@@ -160,9 +203,18 @@ export default function TypedLine({
         document.addEventListener("visibilitychange", tick, { once: true });
         return;
       }
+      if (hovering.current) {
+        timer = window.setTimeout(tick, 300); // someone is about to click the link: wait
+        return;
+      }
       if (queue.length === 0) {
         const next = (at + 1) % lines.length;
-        queue = steps(lines[at], lines[next]);
+        queue = steps(
+          lines[at],
+          lines[next],
+          link && next === link.line ? LINK_HOLD : HOLD,
+          Boolean(link && at === link.line),
+        );
         at = next;
       }
       const { wait, ...shown } = queue.shift()!;
@@ -175,7 +227,9 @@ export default function TypedLine({
       window.clearTimeout(timer);
       document.removeEventListener("visibilitychange", tick);
     };
-  }, [lines]);
+  }, [lines, link]);
+
+  const atRest = !view.caret && !view.sel && !view.tail;
 
   return (
     <p className={className}>
@@ -186,9 +240,18 @@ export default function TypedLine({
             {line}
           </span>
         ))}
-        <span className="typed-live">
-          {view.head}
+        <span
+          className="typed-live"
+          onPointerOver={(e) => {
+            hovering.current = (e.target as HTMLElement).classList.contains("typed-link");
+          }}
+          onPointerLeave={() => {
+            hovering.current = false;
+          }}
+        >
+          {atRest ? withLink(view.head, link, lines) : view.head}
           <span className={view.caret ? "typed-caret on" : "typed-caret"} />
+          {view.sel ? <span className="typed-sel">{view.sel}</span> : null}
           {view.tail}
         </span>
       </span>

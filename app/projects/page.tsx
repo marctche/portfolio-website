@@ -2,7 +2,6 @@ import Link from "next/link";
 import BackLink from "@/components/BackLink";
 import IndexTable from "@/components/IndexTable";
 import SectionHead from "@/components/SectionHead";
-import SiteFooter from "@/components/SiteFooter";
 import StackIcons from "@/components/StackIcons";
 import { pages, projects } from "@/lib/content";
 
@@ -39,10 +38,8 @@ export default function Projects() {
           <BackLink href="/" label="home" />
           <SectionHead {...pages.projects} />
           <IndexTable ariaLabel="projects" columns={columns} rows={rows} />
-          <p className="note">a selected list, not an attempt to fit everything onto one page.</p>
         </section>
       </main>
-      <SiteFooter />
     </>
   );
 }

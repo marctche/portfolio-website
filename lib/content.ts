@@ -34,6 +34,8 @@ export const siteDescription =
 export const home: {
   greeting: string;
   lines: [string, ...string[]];
+  /** Once `lines[line]` is fully typed, `word` in it becomes a link to `href`. */
+  lineLink: { line: number; word: string; href: string };
   tiles: { n: string; title: string; line: string; href: string }[];
 } = {
   greeting: "hey, i'm marc.",
@@ -41,11 +43,12 @@ export const home: {
     "i'm studying software engineering at the university of ottawa.",
     "i'm working in management consulting at bdo canada.",
     "i'm building things i wish already existed.",
-    "you should check out my projects.",
+    "you should check out my projects!!!!!!!!!!!!!!!!!!!!",
     "i'm slowly making my way around the world.",
     "i'm trying to make my guitar sound like mk.gee's.",
     "i'm usually learning something completely unrelated to what i was learning last week.",
   ],
+  lineLink: { line: 3, word: "projects", href: "/projects" },
   tiles: [
     { n: "01", title: "PROJECTS", line: "THINGS I'VE MADE", href: "/projects" },
     {
