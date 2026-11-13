@@ -84,6 +84,8 @@ export type Project = {
   role: string;
   team?: string;
   detail: ProjectDetail;
+  /** Keep the name's capitals on its page title (which is otherwise lowercased), e.g. "rePlay". */
+  keepCase?: boolean;
   /** Only "public" renders. */
   status: "public" | "draft";
   /** Internal editorial notes, never rendered. */
@@ -193,8 +195,9 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "ma-bibliotheque",
-    name: "Ma Bibliothèque",
+    slug: "replay",
+    name: "rePlay",
+    keepCase: true,
     year: "2026",
     oneLiner:
       "My Apple Music history as a bilingual dashboard. Yes, that's a lot of one artist.",

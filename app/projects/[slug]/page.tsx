@@ -17,7 +17,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = list.find((p) => p.slug === slug);
-  return { title: project ? project.name.toLowerCase() : "projects" };
+  if (!project) return { title: "projects" };
+  return { title: project.keepCase ? project.name : project.name.toLowerCase() };
 }
 
 function Beat({ label, paras }: { label: string; paras?: string[] }) {
@@ -36,7 +37,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const i = list.findIndex((p) => p.slug === slug);
   if (i < 0) notFound();
-  const { name, team, year, stack, links, detail } = list[i];
+  const { name, keepCase, team, year, stack, links, detail } = list[i];
   const prev = i > 0 ? list[i - 1] : null;
   const next = i < list.length - 1 ? list[i + 1] : null;
   const kicker = [String(i + 1).padStart(3, "0"), team, year]
@@ -47,6 +48,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (links.repo) footerLinks.push({ label: projectLinks.repo, href: links.repo, external: true });
   if (links.live) footerLinks.push({ label: projectLinks.live, href: links.live, external: true });
   const hasAside = Boolean(detail.interesting?.length || detail.next?.length);
+  const story = (
+    <div className="beats">
+      <Beat label="WHAT IT IS" paras={detail.what} />
+      <Beat label="WHY IT EXISTS" paras={detail.why} />
+      <Beat label="MY PART" paras={detail.mine} />
+      {hasAside ? (
+        <div className="tiny-grid">
+          <Beat label="THE INTERESTING PART" paras={detail.interesting} />
+          <Beat label="WHAT I'D CHANGE" paras={detail.next} />
+        </div>
+      ) : null}
+    </div>
+  );
   const linksBox = (
     <div className="proj-links">
       <span className="eyebrow">{projectLinks.eyebrow}</span>
@@ -71,22 +85,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <BackLink href="/projects" label="projects" />
           <FeatureLayout
             kicker={kicker}
-            name={name}
+            name={keepCase ? name : name.toLowerCase()}
             stackLine={<StackIcons items={stack} />}
             side={linksBox}
           >
             <p className="lead">{detail.lead}</p>
-            <div className="beats">
-              <Beat label="WHAT IT IS" paras={detail.what} />
-              <Beat label="WHY IT EXISTS" paras={detail.why} />
-              <Beat label="MY PART" paras={detail.mine} />
-              {hasAside ? (
-                <div className="tiny-grid">
-                  <Beat label="THE INTERESTING PART" paras={detail.interesting} />
-                  <Beat label="WHAT I'D CHANGE" paras={detail.next} />
-                </div>
-              ) : null}
-            </div>
+            {story}
           </FeatureLayout>
           {/* The last row: previous / next under the body; the empty left cell keeps the divider running. */}
           <div className="proj-foot bleed">

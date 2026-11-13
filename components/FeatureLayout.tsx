@@ -20,7 +20,7 @@ export default function FeatureLayout({
       <div className="feature-side">
         <div className="feature-name">
           <span className="kicker">{kicker}</span>
-          <h1>{name.toLowerCase()}</h1>
+          <h1>{name}</h1>
           {stackLine}
         </div>
         {side}

@@ -40,7 +40,9 @@ rather than linting. There is no test suite.
 `about`, and `pages` (section heads, including the elsewhere copy).
 Components are presentational and import from it — **copy edits go there, not into JSX**.
 
-Each project carries `status: "public" | "draft"` and an internal `notes` field. Both are
+Each project carries `status: "public" | "draft"` and an internal `notes` field. Project page
+titles are lowercased; `keepCase: true` keeps a name's capitals as written (rePlay). rePlay was
+Ma Bibliothèque: `next.config.mjs` 308-redirects `/projects/ma-bibliotheque` to `/projects/replay`. Both are
 editorial metadata: only `public` rows render, and `notes` never renders. Copy follows the
 no-numbers rule (DESIGN.md): no metrics, counts or figures anywhere; years are fine.
 
@@ -116,8 +118,9 @@ line, which stays still under reduced motion.
 ### Dependencies
 
 Runtime dependencies are `next`, `react`, `react-dom` and `simple-icons` (logo paths for the
-few `StackIcons` that devicon lacks, no runtime cost: the pages are server-rendered). Marc plans to add React Bits
-components per project later; until then, don't add motion or styling libraries.
+few `StackIcons` that devicon lacks, no runtime cost: the pages are server-rendered). Animated project graphics were tried
+and rejected on 2026-11-12 (see LOGBOOK): don't add motion or styling libraries, or graphics,
+without Marc asking.
 
 ## Reference material
 
