@@ -43,7 +43,7 @@ export const home: {
     "i'm studying software engineering at the university of ottawa.",
     "i'm working in management consulting at bdo canada.",
     "i'm building things i wish already existed.",
-    "you should check out my projects!!!!!!!!!!!!!!!!!!!!",
+    "you should check out my projects!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
     "i'm slowly making my way around the world.",
     "i'm trying to make my guitar sound like mk.gee's.",
     "i'm usually learning something completely unrelated to what i was learning last week.",
@@ -112,12 +112,12 @@ export const projects: Project[] = [
     role: "solo: product, design, and all of the code",
     status: "public",
     detail: {
-      lead: "planning a trip with friends is an optimization problem disguised as a group chat.",
+      lead: "i built layover because planning trips with my friends was getting harder than it needed to be.",
       what: [
         "Layover helps a group of friends decide where to go, in what order, for how many nights, and what it will all cost. Everyone says what they want and what they can spend, and it works out which trips are actually possible.",
       ],
       why: [
-        "I kept watching trips fall apart in group chats: different budgets, different must-see cities, and one person quietly doing the spreadsheet. I wanted that negotiation to be structured, and honest about the trade-offs.",
+        "My friends and I are always talking about trips we want to take, but once we actually start planning, it gets messy. Everyone has different budgets, dates, and places they want to go. We end up trying to keep track of everything in a group chat, where details get buried and it's hard to know what's been decided. I wanted a better way to organize it all.",
       ],
       mine: [
         "All of it. I decided what the product should do, designed the data model and the planner, built the app, and set up the cloud pieces around it.",
@@ -143,7 +143,7 @@ export const projects: Project[] = [
     team: "team of three",
     status: "public",
     detail: {
-      lead: "a hotel has two front doors: the one guests use and the one staff use.",
+      lead: "a hotel booking system for guests and front-desk staff, built as part of a database course.",
       what: [
         "e-Hotels is a booking system for a group of hotel chains. Customers search for rooms and book them. Staff look after the other side: check-ins, walk-in rentals, and managing hotels and rooms.",
       ],
@@ -152,7 +152,7 @@ export const projects: Project[] = [
       ],
       mine: [
         "I worked across the stack in a team of three. I built screens for both customers and staff, wrote the typed API layer that sits between the Next.js front end and the Flask back end, and built the room search with its filters.",
-        "I also spent a lot of time in the seams: schema mismatches, credentials, and the odd rendering bug where the two halves disagreed about what the other was sending.",
+        "I also spent a lot of time resolving integration issues between the frontend and backend, including schema mismatches, credentials, and rendering bugs.",
       ],
       interesting: [
         "The database does real work: triggers and views keep availability and capacity honest, so the app doesn't have to re-derive them. The room search waits for you to stop typing before it asks the server anything.",
@@ -167,7 +167,7 @@ export const projects: Project[] = [
     name: "Pharmacy Management System",
     year: "2025",
     oneLiner:
-      "How a prescription moves from written to picked up, modelled as a proper domain.",
+      "A pharmacy management system with prescription validation, role-based access, and workflows.",
     links: {
       repo: "https://github.com/marctche/Pharmacy-Management-System",
     },
@@ -176,7 +176,7 @@ export const projects: Project[] = [
     team: "team of five",
     status: "public",
     detail: {
-      lead: "a prescription is a small story with rules about who is allowed to write each chapter.",
+      lead: "a pharmacy system for managing prescriptions, from creation and validation to preparation and pickup.",
       what: [
         "A system for the life of a prescription in a pharmacy: it is written, prepared, verified, and picked up, or cancelled along the way. Pharmacists, assistants and administrators each see and do different things.",
       ],
@@ -238,7 +238,7 @@ export const projects: Project[] = [
     status: "public",
     notes: "Add the repo link once Marc makes the repo public.",
     detail: {
-      lead: "every football fan has opinions about who the club should sign. this one shows its working.",
+      lead: "i spend enough time thinking about football transfers that i figured i'd try building something around it.",
       what: [
         "You pick a club and say what it needs, like a goalscorer or a midfielder who wins the ball back. Transfer Fit Finder ranks players who would suit that need and shows how the ranking was reached.",
       ],
@@ -308,7 +308,7 @@ export const projects: Project[] = [
         "The firmware, the wiring and the mount. I programmed the Arduino to turn head-array signals into camera commands, connected it to the camera over Bluetooth, and put the physical and electronic parts together.",
       ],
       interesting: [
-        "Most of what I build lives on a screen. This one had wires, so a lot of the work was testing on the hardware itself: checking that the camera responded as soon as you moved, and that the Bluetooth connection held.",
+        "Having an actual physical prototype made the testing pretty different from a web app. I had to check how quickly the camera responded to inputs and whether the Bluetooth connection stayed reliable.",
       ],
     },
   },
@@ -386,18 +386,19 @@ export const experience: {
       name: "BDO Canada",
       role: "Management consulting intern",
       when: "fall 2026",
-      line: "Requirements and the early shape of technology projects: learning how organizations define a problem before anyone builds.",
+      line: "Management consulting work involving business requirements, cloud vendor evaluation, and client sessions on data and AI.",
       body: [
-        "This is the business side of technology work: how a project gets scoped, justified and explained before there is any code. I have also made a point of talking to the engineers behind the engagements, to see how those decisions land in practice.",
+        "I've been working on consulting engagements involving requirements gathering, evaluating different options for clients, and exploring opportunities for data and AI. Some of that has included gathering requirements for a cloud vendor selection and helping deliver client sessions.",
+        "It's been quite different from my previous technical internships. There's more emphasis on research, understanding the client's needs, and figuring out how to present recommendations in a way that's actually useful.",
       ],
     },
     {
       name: "ISED",
       role: "Software quality and requirements",
       when: "summer 2026",
-      line: "Testing and requirements for internal systems. \"Works on my machine\" is not a quality standard.",
+      line: "Testing radio-frequency licensing systems, documenting bugs, and checking that delivered features matched their requirements.",
       body: [
-        "I tested workflows against what the requirements said they should do, wrote up problems so someone else could reproduce them, and learned how much of quality is making sure everyone means the same thing by \"done\".",
+        "I worked on testing SPECTRAweb and SPECTRAplus, checking licensing workflows against their requirements and documenting issues when something wasn't behaving as expected. A big part of it was writing up problems clearly enough that developers could reproduce them and understand what needed fixing.",
       ],
     },
     {
@@ -416,12 +417,12 @@ export const experience: {
       name: "Accenture Ottawa Community Consulting Program",
       role: "AI enablement lead, student consultant",
       when: "2026",
-      line: "I led the AI work and built a multi-agent workflow that turns a young person's intake into ranked employment recommendations, with a counsellor approving every one.",
+      line: "Part of a student consulting team exploring how AI could support employment counsellors, including a multi-agent prototype and an adoption roadmap.",
       body: [
-        "This was a pro bono engagement through a community consulting program for students. Our client was Youth Services Bureau's employment services in Ottawa, and the question was where counsellors lose time and what a careful use of AI could take off their plate.",
-        "I built the prototype in n8n as a chain of agents, each with one job: read the intake, match the person to a persona, line them up against the local job market, find certifications worth pursuing, rank the recommendations, and check the result before anyone sees it.",
-        "Each agent has its own instructions and returns structured data rather than prose, so the next step can check what it received. When something doesn't pass, the workflow loops back and revises instead of guessing. A person's information stays inside their own session, and nothing goes out until a counsellor has approved it.",
-        "Around the prototype, the team delivered research on the local job market, youth personas with a toolkit for counsellors, and a roadmap covering the governance questions to answer first: privacy, explainability, and who signs off. It stayed a prototype and was never deployed, which is the honest way to describe it.",
+        "This was a pro bono engagement through Accenture's Ottawa Community Consulting Program. We worked with a nonprofit employment services organization, exploring where counsellors were spending time and how AI might help with parts of their work.",
+        "Our team developed a prototype using n8n and Azure OpenAI to process intake information, identify relevant jobs and certifications, and generate recommendations for counsellors to review. My focus was the AI workflow itself, including the agent instructions, structured outputs, and the checks between steps.",
+        "Alongside the prototype, we worked on local labour market research, youth personas, and a roadmap covering privacy, human oversight, and what adopting a system like this would actually involve. It remained a prototype and wasn't deployed.",
+        "What I liked about this engagement was that building the prototype was only one part of it. We also had to think about whether it would be useful for the people working with it and what the organization would need before putting something like it into practice.",
       ],
     },
   ],
@@ -430,9 +431,9 @@ export const experience: {
       name: "uOttawa Business Technology Association",
       role: "VP development",
       when: "2026 –",
-      line: "The association's website, AI workshops for other students, and conversations with potential partners.",
+      line: "Working on the association's website, corporate partnerships, and sponsorship opportunities.",
       body: [
-        "I look after how the association shows up online and help run sessions where students try AI tools on real tasks. I also take part in building relationships with companies that might work with the association.",
+        "As VP of Development, I've worked on the association's website and been involved in reaching out to companies about partnerships and sponsorships. It's been a mix of building things for the association and helping create opportunities for it.",
       ],
     },
   ],
@@ -441,13 +442,13 @@ export const experience: {
       name: "Scotiabank S:/HACKS 2026",
       role: "Technical and pitch lead",
       when: "2026",
-      line: "Our team built a fintech idea to help younger banking customers with financial guidance. I led the prototype and the pitch.",
+      line: "We spent the hackathon building a fintech prototype aimed at helping younger banking customers make better financial decisions. I worked on the technical development and led our final pitch. We finished fourth.",
     },
     {
       name: "uOttaHack 8",
       role: "Developer",
       when: "2026",
-      line: "A weekend with a team of three, which turned into Recipe Hero. The project has its own page under projects.",
+      line: "This was my first hackathon, and I got to spend the weekend building Recipe Hero with some of my friends. It was honestly a lot of fun.",
       href: "/projects/recipe-hero",
     },
   ],
@@ -462,9 +463,8 @@ export const about: {
 } = {
   lead: [
     "I'm a software engineering student at the University of Ottawa. I like building things end to end, and I like knowing why they exist before I start.",
-    "I've worked on the technical side of systems, and on the business side of the decisions around them. I like both, and I think I build better when I can see both.",
-    "What I care about in software is that it does what it says. I would rather build a small thing that behaves honestly, one that shows its working and admits what it doesn't know, than a big thing that impresses and then surprises you.",
-    "This site is small on purpose. Some of it is still empty, and I'm fine with that.",
+    "I've had the chance to work in software, infrastructure, quality assurance, and now management consulting. They've been pretty different experiences, which I think is part of what I've enjoyed about them.",
+    "I tend to get pretty invested in the things I build. I like understanding how everything fits together, especially when a project takes me into something I haven't done before. I'm pretty much the same way with my interests outside of software.",
   ],
   facts: [
     { k: "BASED IN", v: "Ottawa, Canada" },
@@ -490,7 +490,7 @@ export const pages: {
       "some for school, some for fun, and a couple because i couldn't stop thinking about the idea.",
   },
   experience: {
-    title: "different jobs, different angles.",
+    title: "where i've worked.",
     intro:
       "software, quality, infrastructure and consulting: each one a different way of looking at the same problem.",
   },

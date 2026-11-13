@@ -230,7 +230,7 @@
   letter-spacing: -0.025em;
 }
 
-/* Index table: ink rules on th, line rules on td, row hover wash, name turns blue. */
+/* Index table: every rule the same grey (one rule colour site-wide), row hover wash, name turns blue. */
 .index {
   border-collapse: collapse;
   width: 100%;
@@ -243,8 +243,8 @@
 }
 .index th {
   padding: 10px 10px 12px;
-  border-top: 1px solid var(--color-ink);
-  border-bottom: 1px solid var(--color-ink);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
   font-weight: normal;
 }
 .index td {
@@ -282,43 +282,131 @@
   color: var(--color-blue);
 }
 
-/* Experience rows: when / name + role / line. Wrap in .exp-list (which bleeds) for the
-   ink top rule. */
-.exp-list {
-  border-top: 1px solid var(--color-ink);
-}
-.exp {
+/* Experience (components/ExperienceIndex): an index left, the selected entry right, on the
+   project pages' 1fr / 2fr grid. It bleeds; the ink top rule and the divider meet. */
+.xp {
   display: grid;
-  grid-template-columns: 14% 28% 58%;
-  border-bottom: 1px solid var(--color-line);
-  padding: 18px var(--gutter) 18px;
+  grid-template-columns: 1fr 2fr;
+  border-top: 1px solid var(--color-line);
 }
-/* The next block's label and ink rule already close the list. */
-.exp:last-child {
-  border-bottom: 0;
+.xp-list {
+  border-right: 1px solid var(--color-line);
+  padding: 16px 28px 18px var(--gutter);
 }
-.exp .when {
+.xp-group + .xp-group {
+  margin-top: 13px;
+}
+.xp-label,
+.xp-kicker {
+  margin: 0 0 6px;
   font-size: 12px;
-}
-.exp h3 {
-  font-size: clamp(25px, 2.7vw, 42px);
-  letter-spacing: -0.045em;
-  font-weight: normal;
-  line-height: 1.1;
-  margin: -6px 20px 0 0;
-}
-.exp p {
-  margin: 0;
-  max-width: 690px;
-  font-size: clamp(17px, 1.65vw, 24px);
-  line-height: 1.28;
-  letter-spacing: -0.025em;
-}
-.exp .role {
-  display: block;
-  font-size: 12px;
-  margin-top: 10px;
+  text-transform: uppercase;
   color: #4a4a4a;
+}
+.xp-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.xp-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 4px 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.xp-item-name {
+  font-size: clamp(18px, 1.6vw, 24px);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+.xp-item-meta {
+  margin-top: 3px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #4a4a4a;
+}
+.xp-item:hover .xp-item-name {
+  color: var(--color-blue);
+}
+.xp-item[aria-current="true"] .xp-item-name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.xp-panel {
+  padding: 18px var(--gutter) 28px 36px;
+}
+.xp-name {
+  margin: 0;
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: normal;
+  letter-spacing: -0.05em;
+  line-height: 1.04;
+  max-width: 900px;
+}
+.xp-role {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #4a4a4a;
+}
+.xp-line {
+  margin: 22px 0 0;
+  max-width: 760px;
+  font-size: clamp(18px, 1.7vw, 25px);
+  line-height: 1.24;
+  letter-spacing: -0.03em;
+}
+.xp-body {
+  margin-top: 22px;
+  column-count: 2;
+  column-gap: 32px;
+  max-width: 1000px;
+}
+.xp-body p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.42;
+  break-inside: avoid;
+}
+/* On a switch the paragraphs fade up while the lines above glitch into place. */
+.xp-body {
+  animation: xp-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes xp-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .xp-body {
+    animation: none;
+  }
+}
+/* The index runs straight into the footer, so the divider meets the footer's rule. */
+.section:has(> .xp) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+.section:has(> .xp) > .back-link {
+  align-self: flex-start;
+}
+.section > .xp {
+  flex: 1;
+}
+/* The inline copy of the detail is for phones only. */
+.xp-inline {
+  display: none;
 }
 
 /* Feature layout: giant name left, lead + body right (project detail pages). It bleeds,
@@ -458,13 +546,6 @@
     font-size: 13px;
     line-height: 1.35;
     margin-top: 8px;
-  }
-  .exp {
-    grid-template-columns: 60px 1fr;
-    gap: 10px;
-  }
-  .exp p {
-    grid-column: 2;
   }
   .feature {
     grid-template-columns: 1fr;
@@ -673,47 +754,7 @@
   }
 }
 
-/* experience + about pages */
-.exp-block + .exp-block {
-  margin-top: 36px;
-}
-.exp-label {
-  margin: 0 0 12px;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-/* Experience: each entry's paragraphs sit behind a native "+ more" toggle. */
-.exp-more summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  margin-top: 6px;
-  font-size: 12px;
-  text-transform: uppercase;
-  cursor: pointer;
-  list-style: none;
-}
-.exp-more summary::-webkit-details-marker {
-  display: none;
-}
-.exp-more summary:hover {
-  color: var(--color-blue);
-}
-.exp-more .when-open,
-.exp-more[open] .when-closed {
-  display: none;
-}
-.exp-more[open] .when-open {
-  display: inline;
-}
-.exp .body {
-  margin-top: 14px;
-  max-width: 620px;
-  font-size: 15px;
-  line-height: 1.42;
-  letter-spacing: 0;
-  color: var(--color-ink);
-}
+/* about page */
 .about-body {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -812,8 +853,31 @@
   outline-color: #fff;
 }
 @media (max-width: 800px) {
-  .exp > div {
-    grid-column: 2;
+  .xp {
+    grid-template-columns: 1fr;
+  }
+  .xp-list {
+    border-right: 0;
+    padding: 14px var(--gutter) 20px;
+  }
+  .xp-panel {
+    display: none;
+  }
+  .xp-inline {
+    display: block;
+    padding: 10px 0 14px;
+  }
+  /* The row above already shows the name, role and year. */
+  .xp-inline .xp-kicker,
+  .xp-inline .xp-name,
+  .xp-inline .xp-role {
+    display: none;
+  }
+  .xp-inline .xp-line {
+    margin-top: 6px;
+  }
+  .xp-body {
+    column-count: 1;
   }
   .about-body {
     grid-template-columns: 1fr;

@@ -68,23 +68,29 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
   Under it, one last row on the same two columns (`.proj-foot`): an empty cell, and the
   previous / next nav under the body. Then
   `SiteFooter`, with no gap (`.section-flush`).
-- `/experience` — `SectionHead` plus four `ExperienceBlock`s (work, pro bono, involvement, hacks).
-  Each entry shows its one-liner; its `body` paragraphs sit behind a native `<details>`
-  "+ more" toggle, so pro bono shows on the first screen.
-  YSB appears only in the body of the Accenture OCCP pro bono entry, never as a row or headline.
+- `/experience` — `SectionHead`, then `ExperienceIndex` (client): an index left and a detail
+  panel right, on the project pages' `1fr 2fr` grid. Left: every entry, grouped (work,
+  involvement, hackathons; the Accenture pro bono entry leads involvement, there is no pro bono
+  heading), as name + role · year. Right: the selected entry's group, name,
+  role, one-liner and body (in two columns). It opens on the Accenture pro bono entry, so
+  that's on screen at once. On a switch the short lines glitch into place (`Scramble`) and the
+  paragraphs fade up; both stay still under reduced motion. Under 800px the detail opens inline under the selected row. The
+  index fills down to the footer so the divider meets its rule. Fits one screen at 1280×800 and
+  up. The Accenture pro bono entry never names its client; it's described only as a nonprofit employment services organization.
 - `/about` — `SectionHead`, lead paragraphs, a facts row, and the contact `BlueFooter`.
 - `/elsewhere` — intentionally empty: a heading and one line. Don't add content.
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
 `BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead` (title + intro in the right two-thirds, left third empty; the tabs have no eyebrow label), `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
-(detail page shell), `ExperienceBlock`, `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
+(detail page shell), `ExperienceIndex` (experience index + detail panel), `Scramble` (text that glitches into place on change), `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
 simple-icons paths in their brand hex for the few devicon lacks; names with no logo, such as AWS
 Lambda, Recharts and API-Football, fall back to small text; add new stack names to its `ICONS`
 map), `TypedLine` (the hero's typed line). All are server
-components except `TypedLine`. It retypes only the words that differ between consecutive
+components except `TypedLine`, `ExperienceIndex` and `Scramble`. It retypes only the words that differ between consecutive
 lines (a word-level LCS), backspacing them. `home.lineLink` turns one word of one line into a
 link once that line is typed ("projects" → `/projects`); that line holds longer, the loop waits
-while it's hovered, and it leaves with a select-and-delete (highlight, then gone at once). It
+while it's hovered, and it leaves with a select-and-delete: its run of 50 "!" first, in one fast
+drag (`BANG_SELECT`), then its words (highlight, then gone at once). It
 reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
 
@@ -100,7 +106,7 @@ Tailwind v4 with an `@theme` block in `app/globals.css`. Tokens: `--color-paper`
 
 Alongside the utilities, `globals.css` has a small set of plain CSS component classes ported
 from `inspo/06-reference.html`: `.display-hero`, `.display-title`, `.display-name`, `.hero`,
-`.tiles`/`.tile`, `.section`, `.index`, `.exp`, `.feature`, `.contact`/`.contact-foot`,
+`.tiles`/`.tile`, `.section`, `.index`, `.xp`, `.feature`, `.contact`/`.contact-foot`,
 `.site-footer`. Those are the reference's values; don't re-derive them. One deliberate
 departure: the reference's `.wrap { max-width: 1540px }` container is gone. Everything runs
 full width with a `--gutter` of 24px, or 14px under 800px (paragraphs keep their own reading widths).
@@ -112,7 +118,7 @@ the project page's divider ends on the `.proj-nav` rule, and `.tiny-grid`'s rule
 divider. A new ruled block follows the same pattern.
 
 The mobile breakpoint is 800px: the table collapses to stacked rows, and tiles go 2×2.
-Lines are 1px. No radius, no shadows. The only motion is colour hovers and the hero's typed
+Lines are 1px and all one colour (`--color-line`); no ink rules. No radius, no shadows. The only motion is colour hovers and the hero's typed
 line, which stays still under reduced motion.
 
 ### Dependencies

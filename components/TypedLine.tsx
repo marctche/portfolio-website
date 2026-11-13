@@ -6,8 +6,9 @@ import { useEffect, useRef, useState } from "react";
 /**
  * The home hero's second line. It renders `lines[0]`, then, a couple of seconds apart,
  * backspaces and retypes only the words that differ from the next line, and loops. Leaving
- * the link's line is a select-and-delete instead: its words get highlighted as if dragged
- * across, vanish at once, and the next line types in.
+ * the link's line is a select-and-delete instead: first its long run of "!" is selected in
+ * one fast drag and deleted, then its words are highlighted, vanish at once, and the next
+ * line types in.
  * - `link`: once its line is fully typed, its word turns into a link (underline draws in).
  *   That line holds longer, and the loop waits while the pointer is on the link.
  *
@@ -25,6 +26,8 @@ const ARRIVE = 420; // the caret sits at the edit point before it starts selecti
 const SELECT = 14; // per character, as the selection grows backwards
 const SELECTED = 420; // the selection holds before it's deleted
 const BETWEEN = 260; // between deleting and typing, and between two edits
+const BANG_SELECT = 7; // per "!", selecting the run at the end of the link line: a fast drag
+const BANG_SELECTED = 240; // that selection holds before it's deleted
 const DELETE = 28; // per character, backspacing
 const TYPE = 55; // per character, plus up to TYPE_JITTER
 const TYPE_JITTER = 45;
@@ -123,6 +126,18 @@ function steps(a: string, b: string, hold: number, select: boolean): Step[] {
   const pause = (wait: number) => {
     out[out.length - 1].wait = wait;
   };
+  // Leaving the link line: its run of "!" goes first, in one fast select-and-delete.
+  const bangs = select ? (a.match(/!+$/)?.[0] ?? "") : "";
+  if (bangs) {
+    const rest = a.slice(0, -bangs.length);
+    out.push({ head: a, sel: "", tail: "", caret: true, wait: ARRIVE });
+    for (let k = bangs.length - 1; k >= 0; k--) {
+      out.push({ head: rest + bangs.slice(0, k), sel: bangs.slice(k), tail: "", caret: true, wait: BANG_SELECT });
+    }
+    pause(BANG_SELECTED);
+    out.push({ head: rest, sel: "", tail: "", caret: true, wait: BETWEEN });
+    a = rest;
+  }
   for (const { before, from, to, after } of edits(a, b)) {
     out.push({ head: before + from, sel: "", tail: after, caret: true, wait: ARRIVE });
     if (from && !select) {
