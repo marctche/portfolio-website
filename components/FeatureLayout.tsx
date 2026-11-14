@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export default function FeatureLayout({
   kicker,
@@ -15,12 +15,14 @@ export default function FeatureLayout({
   side?: ReactNode;
   children: ReactNode;
 }) {
+  // The longest word sets a size cap so no word is ever broken across lines (globals.css).
+  const longest = Math.max(...name.split(/\s+/).map((w) => w.length));
   return (
     <article className="feature bleed">
       <div className="feature-side">
         <div className="feature-name">
           <span className="kicker">{kicker}</span>
-          <h1>{name}</h1>
+          <h1 style={{ "--longest": longest } as CSSProperties}>{name}</h1>
           {stackLine}
         </div>
         {side}

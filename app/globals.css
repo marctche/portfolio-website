@@ -414,15 +414,19 @@
   justify-content: space-between;
   min-height: 320px;
   padding: 28px 28px 30px var(--gutter);
+  container-type: inline-size;
 }
+/* --longest (the longest word's length, set in FeatureLayout) caps the size so that word
+   fits the column whole: about 0.5em a character at this tracking, m-heavy words included. */
 .feature-name h1,
 .feature-name h2 {
-  font-size: clamp(70px, 9.5vw, 150px);
+  --cap: calc(100cqi / (var(--longest, 8) * 0.5));
+  font-size: min(clamp(70px, 9.5vw, 150px), var(--cap));
   line-height: 0.88;
   font-weight: normal;
   letter-spacing: -0.095em;
   margin: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
 }
 .feature-body {
   --pad-left: 36px;
@@ -542,7 +546,7 @@
   }
   .feature-name h1,
   .feature-name h2 {
-    font-size: 85px;
+    font-size: min(85px, var(--cap));
   }
   .feature-body {
     --pad-left: var(--gutter);
