@@ -376,21 +376,6 @@
   line-height: 1.42;
   break-inside: avoid;
 }
-/* On a switch the paragraphs fade up while the lines above glitch into place. */
-.xp-body {
-  animation: xp-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes xp-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .xp-body {
-    animation: none;
-  }
-}
 /* The index runs straight into the footer, so the divider meets the footer's rule. */
 .section:has(> .xp) {
   flex: 1;
@@ -899,4 +884,37 @@
   .contact-foot {
     margin-top: 100px;
   }
+}
+
+/* Multi-cursor typing on page open (components/ScrambleIn): the untyped part of each line is
+   hidden in place, and each line has its own blue cursor. */
+::highlight(typing) {
+  color: transparent;
+  text-decoration-color: transparent;
+}
+.type-caret {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  background: var(--color-blue);
+  pointer-events: none;
+  z-index: 5;
+}
+/* The same cursor inside React text (components/TypeText): an empty inline that takes no
+   width, so the text never shifts. The untyped rest keeps its space. */
+.type-caret-inline {
+  position: relative;
+}
+.type-caret-inline::after {
+  content: "";
+  position: absolute;
+  top: 0.08em;
+  bottom: 0.02em;
+  left: 0;
+  width: 2px;
+  background: var(--color-blue);
+}
+.type-ghost {
+  visibility: hidden;
 }

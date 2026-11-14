@@ -1,22 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-const LOWER = "abcdefghijklmnopqrstuvwxyz";
-const UPPER = LOWER.toUpperCase();
-const DIGITS = "0123456789";
-
-/** A random character of the same kind (lower, upper, digit); anything else stays put. */
-function noise(ch: string) {
-  const set = /[a-z]/.test(ch) ? LOWER : /[A-Z]/.test(ch) ? UPPER : /[0-9]/.test(ch) ? DIGITS : "";
-  return set ? set[Math.floor(Math.random() * set.length)] : ch;
-}
+import { FRAME_MS, frame, prefersStill, scrambleDuration, settleTimes } from "@/lib/scramble";
 
 /**
- * Text that "glitches" into place when it changes: every letter flickers through random
- * letters and settles, roughly left to right, in about half a second. It shows the real text
- * on first render (so no-JS and the server render are plain), and only scrambles on a change.
- * Screen readers get the real text at once; reduced motion just swaps it.
+ * Text that glitches into place when it changes (lib/scramble.ts). It shows the real text on
+ * first render (so no-JS and the server render are plain), and only scrambles on a change;
+ * the page-level <ScrambleIn> covers the first appearance. Screen readers get the real text
+ * at once; reduced motion just swaps it.
  */
 export default function Scramble({ text }: { text: string }) {
   const [shown, setShown] = useState(text);
@@ -25,15 +16,13 @@ export default function Scramble({ text }: { text: string }) {
   useEffect(() => {
     if (prev.current === text) return;
     prev.current = text;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersStill()) {
       setShown(text);
       return;
     }
     const chars = [...text];
-    const n = chars.length;
-    const duration = Math.min(750, 300 + n * 5);
-    // Each character settles at its own moment: mostly left to right, with some jitter.
-    const settle = chars.map((_, i) => (i / Math.max(1, n)) * duration * 0.65 + Math.random() * duration * 0.35);
+    const duration = scrambleDuration(chars.length);
+    const settle = settleTimes(chars.length, duration);
     const start = performance.now();
     let raf = 0;
     let last = 0;
@@ -43,9 +32,9 @@ export default function Scramble({ text }: { text: string }) {
         setShown(text);
         return;
       }
-      if (now - last > 45) {
+      if (now - last > FRAME_MS) {
         last = now;
-        setShown(chars.map((ch, i) => (t >= settle[i] ? ch : noise(ch))).join(""));
+        setShown(frame(chars, settle, t));
       }
       raf = requestAnimationFrame(tick);
     };
@@ -56,7 +45,9 @@ export default function Scramble({ text }: { text: string }) {
   return (
     <>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">{shown}</span>
+      <span aria-hidden="true" data-scramble-own>
+        {shown}
+      </span>
     </>
   );
 }

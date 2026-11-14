@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Scramble from "@/components/Scramble";
+import TypeText from "@/components/TypeText";
 import type { Entry } from "@/lib/content";
 
 export type ExperienceGroup = { label: string; entries: Entry[] };
@@ -21,9 +22,10 @@ function Name({ entry }: { entry: Entry }) {
 
 /**
  * The selected entry in full: group and year, name, role, one-liner, then its paragraphs.
- * On a switch, the short lines glitch into place (Scramble) and the paragraphs fade up.
+ * On a switch, the short lines (group, name, role) glitch into place (Scramble) while the
+ * summary and paragraphs are re-typed, each by its own cursor, all at once (TypeText).
  */
-function Detail({ group, entry }: { group: string; entry: Entry }) {
+function Detail({ group, entry, slots }: { group: string; entry: Entry; slots: number }) {
   return (
     <>
       <span className="xp-kicker">
@@ -36,16 +38,17 @@ function Detail({ group, entry }: { group: string; entry: Entry }) {
         <Scramble text={entry.role.toUpperCase()} />
       </span>
       <p className="xp-line">
-        <Scramble text={entry.line} />
+        <TypeText text={entry.line} delay={60} />
       </p>
-      {entry.body?.length ? (
-        // Keyed by entry, so it remounts on a switch and its fade-up plays again.
-        <div className="xp-body" key={entry.name}>
-          {entry.body.map((b, i) => (
-            <p key={i}>{b}</p>
-          ))}
-        </div>
-      ) : null}
+      {/* A fixed set of paragraph slots (empty ones hidden), so a paragraph that appears on a
+          switch is typed in too instead of popping in. */}
+      <div className="xp-body" hidden={!entry.body?.length}>
+        {Array.from({ length: slots }, (_, i) => (
+          <p key={i} hidden={!entry.body?.[i]}>
+            <TypeText text={entry.body?.[i] ?? ""} delay={95 + i * 35} />
+          </p>
+        ))}
+      </div>
     </>
   );
 }
@@ -60,6 +63,7 @@ export default function ExperienceIndex({ groups, initial }: { groups: Experienc
   const [selected, setSelected] = useState(initial);
   const all = groups.flatMap((g) => g.entries.map((e) => ({ group: g.label, entry: e })));
   const current = all.find((x) => x.entry.name === selected) ?? all[0];
+  const slots = Math.max(0, ...all.map((x) => x.entry.body?.length ?? 0));
 
   return (
     <div className="xp bleed">
@@ -86,7 +90,7 @@ export default function ExperienceIndex({ groups, initial }: { groups: Experienc
                     </button>
                     {on ? (
                       <div className="xp-inline">
-                        <Detail group={g.label} entry={e} />
+                        <Detail group={g.label} entry={e} slots={slots} />
                       </div>
                     ) : null}
                   </li>
@@ -97,7 +101,7 @@ export default function ExperienceIndex({ groups, initial }: { groups: Experienc
         ))}
       </div>
       <article className="xp-panel" id="xp-panel" aria-live="polite">
-        <Detail group={current.group} entry={current.entry} />
+        <Detail group={current.group} entry={current.entry} slots={slots} />
       </article>
     </div>
   );

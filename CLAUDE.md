@@ -73,8 +73,9 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
   involvement, hackathons; the Accenture pro bono entry leads involvement, there is no pro bono
   heading), as name + role · year. Right: the selected entry's group, name,
   role, one-liner and body (in two columns). It opens on the Accenture pro bono entry, so
-  that's on screen at once. On a switch the short lines glitch into place (`Scramble`) and the
-  paragraphs fade up; both stay still under reduced motion. Under 800px the detail opens inline under the selected row. The
+  that's on screen at once. On a switch the group, name and role glitch into place (`Scramble`) while
+  the summary and paragraphs are re-typed, each by its own blue cursor, all at once (`TypeText`;
+  fixed paragraph slots, so a new paragraph is typed in too). Under 800px the detail opens inline under the selected row. The
   index fills down to the footer so the divider meets its rule. Fits one screen at 1280×800 and
   up. The Accenture pro bono entry never names its client; it's described only as a nonprofit employment services organization.
 - `/about` — `SectionHead`, lead paragraphs, a facts row, and the contact `BlueFooter`.
@@ -82,11 +83,12 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
 `BlueFooter` (blue block: big links + the © row; replaces `SiteFooter` on the about page), `SectionHead` (title + intro in the right two-thirds, left third empty; the tabs have no eyebrow label), `IndexTable` (generic table: `columns`, `rows`), `Tile`, `FeatureLayout`
-(detail page shell), `ExperienceIndex` (experience index + detail panel), `Scramble` (text that glitches into place on change), `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
+(detail page shell), `ExperienceIndex` (experience index + detail panel), `Scramble` (text that glitches into place on change), `TypeText` (text re-typed by its own cursor on change), `ScrambleIn` (in `app/layout.tsx`: every inner page's text arrives as it opens, first load and each tab click: headings and short standalone text glitch; paragraphs, sentences (text ending in . ? !) and anything over 60 characters are typed by many cursors at once, with the untyped part hidden in place by a CSS highlight (`::highlight(typing)`) and each cursor an overlay on <body>, so React's text and the layout never change; skips `/`, `.sr-only`, svg and `[data-no-scramble]`; restores the exact text and yields any node React rewrites mid-glitch), `StackIcons` (a stack as brand-colour logos: devicon SVGs in `public/stack/`, plus
 simple-icons paths in their brand hex for the few devicon lacks; names with no logo, such as AWS
 Lambda, Recharts and API-Football, fall back to small text; add new stack names to its `ICONS`
 map), `TypedLine` (the hero's typed line). All are server
-components except `TypedLine`, `ExperienceIndex` and `Scramble`. It retypes only the words that differ between consecutive
+components except `TypedLine`, `ExperienceIndex`, `Scramble`, `TypeText` and `ScrambleIn`. The glitch
+and typing maths (`noise`, `typedCount`, about a second either way) is shared in `lib/scramble.ts`. It retypes only the words that differ between consecutive
 lines (a word-level LCS), backspacing them. `home.lineLink` turns one word of one line into a
 link once that line is typed ("projects" → `/projects`); that line holds longer, the loop waits
 while it's hovered, and it leaves with a select-and-delete: its run of 50 "!" first, in one fast
@@ -94,7 +96,7 @@ drag (`BANG_SELECT`), then its words (highlight, then gone at once). It
 reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
 
-`app/layout.tsx` holds metadata only (title template `%s · Marc Tchetchenigbo`). Each page
+`app/layout.tsx` holds metadata and `ScrambleIn` only (title template `%s · Marc Tchetchenigbo`). Each page
 renders its own `<main id="content">` and its own ending: `SiteFooter`, `BlueFooter`, or nothing
 (home).
 
@@ -118,8 +120,8 @@ the project page's divider ends on the `.proj-nav` rule, and `.tiny-grid`'s rule
 divider. A new ruled block follows the same pattern.
 
 The mobile breakpoint is 800px: the table collapses to stacked rows, and tiles go 2×2.
-Lines are 1px and all one colour (`--color-line`); no ink rules. No radius, no shadows. The only motion is colour hovers and the hero's typed
-line, which stays still under reduced motion.
+Lines are 1px and all one colour (`--color-line`); no ink rules. No radius, no shadows. The only motion is colour hovers, the hero's typed
+line, and text arriving: glitch for headings and short text, multi-cursor typing for sentences and paragraphs (pages opening, experience switches); all stay still under reduced motion.
 
 ### Dependencies
 
