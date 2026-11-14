@@ -96,7 +96,7 @@ drag (`BANG_SELECT`), then its words (highlight, then gone at once). It
 reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
 
-`app/layout.tsx` holds metadata and `ScrambleIn` only (title template `%s · Marc Tchetchenigbo`). Each page
+`app/layout.tsx` holds metadata, `ScrambleIn` and `<Analytics />` only (title template `%s · Marc Tchetchenigbo`). Each page
 renders its own `<main id="content">` and its own ending: `SiteFooter`, `BlueFooter`, or nothing
 (home).
 
@@ -125,8 +125,10 @@ line, and text arriving: glitch for headings and short text, multi-cursor typing
 
 ### Dependencies
 
-Runtime dependencies are `next`, `react`, `react-dom` and `simple-icons` (logo paths for the
-few `StackIcons` that devicon lacks, no runtime cost: the pages are server-rendered). Animated project graphics were tried
+Runtime dependencies are `next`, `react`, `react-dom`, `simple-icons` (logo paths for the
+few `StackIcons` that devicon lacks, no runtime cost: the pages are server-rendered) and
+`@vercel/analytics` (`<Analytics />` in `app/layout.tsx`; Web Analytics must be enabled on the
+Vercel project). Animated project graphics were tried
 and rejected on 2026-11-12 (see LOGBOOK): don't add motion or styling libraries, or graphics,
 without Marc asking.
 
