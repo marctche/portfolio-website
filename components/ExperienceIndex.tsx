@@ -12,10 +12,10 @@ function Name({ entry }: { entry: Entry }) {
   const { name, href } = entry;
   const text = <Scramble text={name} />;
   if (!href) return text;
-  if (href.startsWith("/")) return <Link href={href}>{text} ↗</Link>;
+  if (href.startsWith("/")) return <Link href={href}>{text} ↗︎</Link>;
   return (
     <a href={href} target="_blank" rel="noopener noreferrer">
-      {text} ↗
+      {text} ↗︎
     </a>
   );
 }

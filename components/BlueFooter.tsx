@@ -1,10 +1,7 @@
-import { profile } from "@/lib/content";
-
 export type FooterLink = { label: string; href: string; external?: boolean };
 
 /**
- * The blue block that ends the about page and every project page: big links,
- * then the copyright / back-to-top row. Replaces SiteFooter on those pages.
+ * The blue block that ends the about page: big links, and nothing under them.
  */
 export default function BlueFooter({
   eyebrow,
@@ -42,10 +39,6 @@ export default function BlueFooter({
       ) : empty ? (
         <p className="contact-empty">{empty}</p>
       ) : null}
-      <div className="contact-foot bleed">
-        <span>© {profile.name}</span>
-        <a href="#content">back to top ↑</a>
-      </div>
     </footer>
   );
 }

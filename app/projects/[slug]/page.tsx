@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import BackLink from "@/components/BackLink";
 import type { FooterLink } from "@/components/BlueFooter";
 import FeatureLayout from "@/components/FeatureLayout";
-import SiteFooter from "@/components/SiteFooter";
 import StackIcons from "@/components/StackIcons";
 import { projectLinks, projects } from "@/lib/content";
 
@@ -88,21 +87,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             name={keepCase ? name : name.toLowerCase()}
             stackLine={<StackIcons items={stack} />}
             side={linksBox}
+            foot={
+              <nav className="proj-nav" aria-label="more projects">
+                {prev ? <Link href={`/projects/${prev.slug}`}>←︎ previous: {prev.name}</Link> : <span />}
+                {next ? <Link href={`/projects/${next.slug}`}>next: {next.name} →︎</Link> : <span />}
+              </nav>
+            }
           >
             <p className="lead">{detail.lead}</p>
             {story}
           </FeatureLayout>
-          {/* The last row: previous / next under the body; the empty left cell keeps the divider running. */}
-          <div className="proj-foot bleed">
-            <div aria-hidden="true" />
-            <nav className="proj-nav" aria-label="more projects">
-              {prev ? <Link href={`/projects/${prev.slug}`}>← previous: {prev.name}</Link> : <span />}
-              {next ? <Link href={`/projects/${next.slug}`}>next: {next.name} →</Link> : <span />}
-            </nav>
-          </div>
         </section>
       </main>
-      <SiteFooter />
     </>
   );
 }

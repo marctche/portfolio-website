@@ -1,7 +1,6 @@
 import BackLink from "@/components/BackLink";
 import ExperienceIndex from "@/components/ExperienceIndex";
 import SectionHead from "@/components/SectionHead";
-import SiteFooter from "@/components/SiteFooter";
 import { experience, pages } from "@/lib/content";
 
 export const metadata = { title: "experience" };
@@ -25,7 +24,6 @@ export default function Experience() {
           <ExperienceIndex groups={groups} initial={experience.proBono[0].name} />
         </section>
       </main>
-      <SiteFooter />
     </>
   );
 }
