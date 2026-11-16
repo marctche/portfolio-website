@@ -21,15 +21,15 @@ function Name({ entry }: { entry: Entry }) {
 }
 
 /**
- * The selected entry in full: group and year, name, role, one-liner, then its paragraphs.
- * On a switch, the short lines (group, name, role) glitch into place (Scramble) while the
+ * The selected entry in full: year, name, role, one-liner, then its paragraphs.
+ * On a switch, the short lines (year, name, role) glitch into place (Scramble) while the
  * summary and paragraphs are re-typed, each by its own cursor, all at once (TypeText).
  */
-function Detail({ group, entry, slots }: { group: string; entry: Entry; slots: number }) {
+function Detail({ entry, slots }: { entry: Entry; slots: number }) {
   return (
     <>
       <span className="xp-kicker">
-        <Scramble text={`${group} · ${entry.when.toUpperCase()}`} />
+        <Scramble text={entry.when.toUpperCase()} />
       </span>
       <h2 className="xp-name">
         <Name entry={entry} />
@@ -55,8 +55,8 @@ function Detail({ group, entry, slots }: { group: string; entry: Entry; slots: n
 
 /**
  * Experience as an index and a panel, on the project pages' 1fr / 2fr grid. Left: every
- * entry, grouped, as name + role · year. Right: the selected entry in full. It opens on
- * `initial` (the pro bono work), so that is on screen the moment the page loads. Under
+ * entry, grouped, as name, role and year. Right: the selected entry in full. It opens on
+ * `initial` (BDO Canada), so that is on screen the moment the page loads. Under
  * 800px the panel moves inline, under the selected row.
  */
 export default function ExperienceIndex({ groups, initial }: { groups: ExperienceGroup[]; initial: string }) {
@@ -85,12 +85,13 @@ export default function ExperienceIndex({ groups, initial }: { groups: Experienc
                     >
                       <span className="xp-item-name">{e.name}</span>
                       <span className="xp-item-meta">
-                        {e.role} · {e.when}
+                        <span>{e.role}</span>
+                        <span>{e.when}</span>
                       </span>
                     </button>
                     {on ? (
                       <div className="xp-inline">
-                        <Detail group={g.label} entry={e} slots={slots} />
+                        <Detail entry={e} slots={slots} />
                       </div>
                     ) : null}
                   </li>
@@ -101,7 +102,7 @@ export default function ExperienceIndex({ groups, initial }: { groups: Experienc
         ))}
       </div>
       <article className="xp-panel" id="xp-panel" aria-live="polite">
-        <Detail group={current.group} entry={current.entry} slots={slots} />
+        <Detail entry={current.entry} slots={slots} />
       </article>
     </div>
   );

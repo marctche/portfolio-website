@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { FRAME_MS, frame, prefersStill, scrambleDuration, settleTimes } from "@/lib/scramble";
 
 /**
  * The home hero's second line. It renders `lines[0]`, then, a couple of seconds apart,
@@ -9,8 +10,10 @@ import { useEffect, useRef, useState } from "react";
  * the link's line is a select-and-delete instead: first its long run of "!" is selected in
  * one fast drag and deleted, then its words are highlighted, vanish at once, and the next
  * line types in.
- * - `link`: once its line is fully typed, its word turns into a link (underline draws in).
- *   That line holds longer, and the loop waits while the pointer is on the link.
+ * - `link`: as soon as its word is typed (the "!" are still typing), the word becomes a link
+ *   that glitches into place in blue, and again on hover. The "!" are deleted the moment
+ *   they're all typed, the bare line holds a moment so the link can still be clicked, and
+ *   the loop waits while the pointer is on the link.
  *
  * - No JS, reduced motion: `lines[0]`, still. Screen readers always get `lines[0]`.
  * - Every line also sits invisibly in one grid cell, so the box is always as tall as the
@@ -21,11 +24,13 @@ import { useEffect, useRef, useState } from "react";
 
 const FIRST_HOLD = 1800; // ms on the first line before anything moves
 const HOLD = 1800; // ms on each line once it's finished
-const LINK_HOLD = 4200; // ms on the line with the link
+const LINK_HOLD = 200; // ms on the link line once its "!" are all typed, before they go
+const BARE_HOLD = 1200; // ms on the link line after its "!" are deleted, link still live
 const ARRIVE = 420; // the caret sits at the edit point before it starts selecting
 const SELECT = 14; // per character, as the selection grows backwards
 const SELECTED = 420; // the selection holds before it's deleted
 const BETWEEN = 260; // between deleting and typing, and between two edits
+const BANG_ARRIVE = 60; // the caret barely pauses before it selects the "!"
 const BANG_SELECT = 7; // per "!", selecting the run at the end of the link line: a fast drag
 const BANG_SELECTED = 240; // that selection holds before it's deleted
 const DELETE = 28; // per character, backspacing
@@ -130,12 +135,12 @@ function steps(a: string, b: string, hold: number, select: boolean): Step[] {
   const bangs = select ? (a.match(/!+$/)?.[0] ?? "") : "";
   if (bangs) {
     const rest = a.slice(0, -bangs.length);
-    out.push({ head: a, sel: "", tail: "", caret: true, wait: ARRIVE });
+    out.push({ head: a, sel: "", tail: "", caret: true, wait: BANG_ARRIVE });
     for (let k = bangs.length - 1; k >= 0; k--) {
       out.push({ head: rest + bangs.slice(0, k), sel: bangs.slice(k), tail: "", caret: true, wait: BANG_SELECT });
     }
     pause(BANG_SELECTED);
-    out.push({ head: rest, sel: "", tail: "", caret: true, wait: BETWEEN });
+    out.push({ head: rest, sel: "", tail: "", caret: false, wait: BARE_HOLD });
     a = rest;
   }
   for (const { before, from, to, after } of edits(a, b)) {
@@ -168,19 +173,59 @@ function steps(a: string, b: string, hold: number, select: boolean): Step[] {
   return out;
 }
 
-/** `line` with `link.word` as a link, if this is the link's line. */
-function withLink(line: string, link: LineLink | undefined, lines: string[]) {
-  if (!link || line !== lines[link.line]) return line;
-  const at = line.indexOf(link.word);
-  if (at < 0) return line;
+/** The link word: glitches into place when it first appears, and again on hover. */
+function GlitchWord({ word, href }: { word: string; href: string }) {
+  const [shown, setShown] = useState(word);
+  const [bump, setBump] = useState(0);
+
+  useEffect(() => {
+    if (prefersStill()) return;
+    const chars = [...word];
+    const duration = scrambleDuration(chars.length);
+    const settle = settleTimes(chars.length, duration);
+    const start = performance.now();
+    let raf = 0;
+    let last = 0;
+    const tick = (now: number) => {
+      const t = now - start;
+      if (t >= duration) {
+        setShown(word);
+        return;
+      }
+      if (now - last > FRAME_MS) {
+        last = now;
+        setShown(frame(chars, settle, t));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [word, bump]);
+
+  return (
+    // Out of the tab order: the hero is aria-hidden, and the projects tile is right below.
+    <Link className="typed-link" href={href} tabIndex={-1} onPointerEnter={() => setBump((n) => n + 1)}>
+      {shown}
+    </Link>
+  );
+}
+
+/**
+ * `head` with `link.word` as a link, once the link line has been typed up to and including
+ * that word (so it's live while the "!" after it are still typing). Otherwise `head` as is.
+ */
+function withLink(head: string, link: LineLink | undefined, lines: string[]) {
+  if (!link) return head;
+  const full = lines[link.line];
+  const at = full.indexOf(link.word);
+  if (at < 0) return head;
+  const end = at + link.word.length;
+  if (head.length < end || !head.startsWith(full.slice(0, end))) return head;
   return (
     <>
-      {line.slice(0, at)}
-      {/* Out of the tab order: the hero is aria-hidden, and the projects tile is right below. */}
-      <Link className="typed-link" href={link.href} tabIndex={-1}>
-        {link.word}
-      </Link>
-      {line.slice(at + link.word.length)}
+      {head.slice(0, at)}
+      <GlitchWord word={link.word} href={link.href} />
+      {head.slice(end)}
     </>
   );
 }
@@ -244,8 +289,6 @@ export default function TypedLine({
     };
   }, [lines, link]);
 
-  const atRest = !view.caret && !view.sel && !view.tail;
-
   return (
     <p className={className}>
       <span className="sr-only">{lines[0]}</span>
@@ -264,7 +307,7 @@ export default function TypedLine({
             hovering.current = false;
           }}
         >
-          {atRest ? withLink(view.head, link, lines) : view.head}
+          {withLink(view.head, link, lines)}
           <span className={view.caret ? "typed-caret on" : "typed-caret"} />
           {view.sel ? <span className="typed-sel">{view.sel}</span> : null}
           {view.tail}

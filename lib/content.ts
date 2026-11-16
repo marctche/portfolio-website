@@ -42,7 +42,7 @@ export const home: {
   lines: [
     "i'm studying software engineering at the university of ottawa.",
     "i'm working in management consulting at bdo canada.",
-    "i'm building things i wish already existed.",
+    "i'm building things.",
     "you should check out my projects!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
     "i'm slowly making my way around the world.",
     "i'm trying to make my guitar sound like mk.gee's.",
@@ -386,9 +386,9 @@ export const experience: {
       name: "BDO Canada",
       role: "Management consulting intern",
       when: "fall 2026",
-      line: "Management consulting work involving business requirements, cloud vendor evaluation, and client sessions on data and AI.",
+      line: "Management consulting work on change management, business requirements, and client sessions on data and AI.",
       body: [
-        "I've been working on consulting engagements involving requirements gathering, evaluating different options for clients, and exploring opportunities for data and AI. Some of that has included gathering requirements for a cloud vendor selection and helping deliver client sessions.",
+        "Most of my time has gone to supporting change management on client engagements, helping people get ready for new systems and new ways of working. I've also helped gather business requirements, including for a cloud vendor selection, and supported client sessions on data and AI.",
         "It's been quite different from my previous technical internships. There's more emphasis on research, understanding the client's needs, and figuring out how to present recommendations in a way that's actually useful.",
       ],
     },
@@ -404,7 +404,7 @@ export const experience: {
     {
       name: "ESDC",
       role: "Infrastructure developer",
-      when: "2025",
+      when: "winter–summer 2025",
       line: "Automation scripts, a security check over RPA packages, and cloud cost reporting.",
       body: [
         "I wrote scripts that checked automation packages for a known security problem, so people could review the findings instead of opening every package by hand. I also built a dashboard that made cloud spending visible by service, which turned \"where is the money going?\" into a question you could answer.",
@@ -431,9 +431,9 @@ export const experience: {
       name: "uOttawa Business Technology Association",
       role: "VP development",
       when: "2026 –",
-      line: "Working on the association's website, corporate partnerships, and sponsorship opportunities.",
+      line: "Developing intro to AI workshops for students, plus the association's website and corporate partnerships.",
       body: [
-        "As VP of Development, I've worked on the association's website and been involved in reaching out to companies about partnerships and sponsorships. It's been a mix of building things for the association and helping create opportunities for it.",
+        "As VP of Development, I'm developing and leading a set of intro to AI workshops for students who want to learn more about it: what it is, how it works, and how to start using it. They're still in the works. I've also worked on the association's website and reached out to companies about partnerships and sponsorships.",
       ],
     },
   ],
@@ -454,24 +454,18 @@ export const experience: {
   ],
 };
 
-/** About page: intro paragraphs, quick facts, and the contact block copy. */
+/** About page: intro paragraphs and the contact block copy. */
 export const about: {
   lead: string[];
-  facts: { k: string; v: string }[];
   contactHeading: string;
   contactLine: string;
 } = {
   lead: [
-    "I'm a software engineering student at the University of Ottawa. I like building things end to end, and I like knowing why they exist before I start.",
+    "I'm a software engineering student at the University of Ottawa. I like building things end to end, and I like understanding where an idea comes from before I start on it.",
     "I've had the chance to work in software, infrastructure, quality assurance, and now management consulting. They've been pretty different experiences, which I think is part of what I've enjoyed about them.",
     "I tend to get pretty invested in the things I build. I like understanding how everything fits together, especially when a project takes me into something I haven't done before. I'm pretty much the same way with my interests outside of software.",
   ],
-  facts: [
-    { k: "BASED IN", v: "Ottawa, Canada" },
-    { k: "LANGUAGES", v: "English & French" },
-    { k: "STUDYING", v: "Software engineering, uOttawa" },
-  ],
-  contactHeading: "have an idea, a question, or a good travel recommendation?",
+  contactHeading: "have an idea, a question, or want to connect?",
   contactLine: "Send it over, I read everything.",
 };
 

@@ -149,24 +149,10 @@
   background: var(--color-blue);
   color: var(--color-paper);
 }
-/* The link word on the "check out my projects" line: its underline draws in once typed. */
+/* The link word on the "check out my projects" line: it glitches into place in blue
+   (components/TypedLine), and again on hover. */
 .typed-link {
-  background: linear-gradient(currentColor, currentColor) 0 100% / 0 0.06em no-repeat;
-  animation: typed-link-in 520ms ease-out 120ms forwards;
-}
-.typed-link:hover {
   color: var(--color-blue);
-}
-@keyframes typed-link-in {
-  to {
-    background-size: 100% 0.06em;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .typed-link {
-    animation: none;
-    background-size: 100% 0.06em;
-  }
 }
 /* A run of "!!!!" is one unbreakable word; let it wrap on narrow screens. */
 .typed {
@@ -329,6 +315,9 @@
   line-height: 1.1;
 }
 .xp-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 12px;
   margin-top: 3px;
   font-size: 11px;
   text-transform: uppercase;
@@ -773,30 +762,6 @@
 .about-copy p + p {
   margin-top: 25px;
 }
-/* Its own row after .about-body, so it can bleed: the rule runs edge to edge and the
-   facts stay under the copy column. The margin plus the last paragraph's makes 54px. */
-.about-facts {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  border-top: 1px solid var(--color-line);
-  margin-top: 26px;
-  padding: 15px var(--gutter) 0;
-}
-.about-facts-list {
-  grid-column: 2;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  max-width: 1000px;
-}
-.about-facts .k {
-  font-size: 11px;
-  text-transform: uppercase;
-}
-.about-facts .v {
-  font-size: 16px;
-  margin-top: 10px;
-}
 /* Blue contact block that ends the about page. Full bleed. */
 .contact {
   background: var(--color-blue);
@@ -870,13 +835,6 @@
   .about-body {
     grid-template-columns: 1fr;
     gap: 25px;
-  }
-  .about-facts {
-    grid-template-columns: 1fr;
-  }
-  .about-facts-list {
-    grid-column: 1;
-    grid-template-columns: 1fr 1fr;
   }
   .contact {
     padding: 74px var(--gutter);

@@ -56,8 +56,8 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 - `/` — home. A centred hero filling the viewport: the greeting, then `TypedLine`, which
   starts on `home.lines[0]` and types through the rest. Then four `Tile`s: projects,
   experience, about, elsewhere. No footer.
-- `/projects` — fits one desktop screen (1280×800 and up). `IndexTable` of all public projects (`# · THING · STACK · YEAR · IN ONE
-  SENTENCE`). Every name links to its own detail page, never straight to a repo or demo. No note and no footer: the page ends on the table.
+- `/projects` — fits one desktop screen (1280×800 and up). `IndexTable` of all public projects (`# THING STACK YEAR IN ONE
+  SENTENCE` columns). Every name links to its own detail page, never straight to a repo or demo. No note and no footer: the page ends on the table.
 - `/projects/[slug]` — a page for every public project (`generateStaticParams`). Any other slug
   calls `notFound()`. On desktop (≥801px) the page is exactly one screen: `body:has(.section-flush)`
   is locked to `100dvh`, and if the copy is taller the text column (`.feature-body`) scrolls on
@@ -71,14 +71,14 @@ There is **no nav bar**. The home tiles are the menu, and every inner page start
 - `/experience` — `SectionHead`, then `ExperienceIndex` (client): an index left and a detail
   panel right, on the project pages' `1fr 2fr` grid. Left: every entry, grouped (work,
   involvement, hackathons; the Accenture pro bono entry leads involvement, there is no pro bono
-  heading), as name + role · year. Right: the selected entry's group, name,
-  role, one-liner and body (in two columns). It opens on the Accenture pro bono entry, so
-  that's on screen at once. On a switch the group, name and role glitch into place (`Scramble`) while
+  heading), as name, role and year (no dot separators anywhere on the site). Right: the selected entry's year, name,
+  role, one-liner and body (in two columns). It opens on BDO Canada, so
+  that's on screen at once. On a switch the year, name and role glitch into place (`Scramble`) while
   the summary and paragraphs are re-typed, each by its own blue cursor, all at once (`TypeText`;
   fixed paragraph slots, so a new paragraph is typed in too). Under 800px the detail opens inline under the selected row. The
   index fills down to the footer so the divider meets its rule. Fits one screen at 1280×800 and
   up. The Accenture pro bono entry never names its client; it's described only as a nonprofit employment services organization.
-- `/about` — `SectionHead`, lead paragraphs, a facts row, and the contact `BlueFooter`.
+- `/about` — `SectionHead`, lead paragraphs (no facts row), and the contact `BlueFooter`.
 - `/elsewhere` — intentionally empty: a heading and one line. Don't add content.
 
 **Components (`components/`):** `BackLink`, `SiteFooter` (plain row: © + back to top),
@@ -90,13 +90,14 @@ map), `TypedLine` (the hero's typed line). All are server
 components except `TypedLine`, `ExperienceIndex`, `Scramble`, `TypeText` and `ScrambleIn`. The glitch
 and typing maths (`noise`, `typedCount`, about a second either way) is shared in `lib/scramble.ts`. It retypes only the words that differ between consecutive
 lines (a word-level LCS), backspacing them. `home.lineLink` turns one word of one line into a
-link once that line is typed ("projects" → `/projects`); that line holds longer, the loop waits
-while it's hovered, and it leaves with a select-and-delete: its run of 50 "!" first, in one fast
-drag (`BANG_SELECT`), then its words (highlight, then gone at once). It
+link as soon as the word is typed, while the "!" are still typing ("projects" → `/projects`); the
+word glitches into place in blue (and again on hover), the "!" are deleted the moment they're all typed,
+the bare line holds briefly (`BARE_HOLD`) so the link stays clickable, and the loop waits while it's hovered. It
+leaves with a select-and-delete: the run of "!" first, in one fast drag (`BANG_SELECT`), then its words (highlight, then gone at once). It
 reserves the height of the longest line so nothing moves, stays
 still under reduced motion, pauses in a hidden tab, and gives screen readers `lines[0]` only.
 
-`app/layout.tsx` holds metadata, `ScrambleIn` and `<Analytics />` only (title template `%s · Marc Tchetchenigbo`). Each page
+`app/layout.tsx` holds metadata, `ScrambleIn` and `<Analytics />` only (title template `%s | Marc Tchetchenigbo`). Each page
 renders its own `<main id="content">` and its own ending: `SiteFooter`, `BlueFooter`, or nothing
 (home).
 

@@ -5,7 +5,7 @@ import ScrambleIn from "@/components/ScrambleIn";
 import { siteTitle, siteDescription } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: { default: siteTitle, template: `%s · ${siteTitle}` },
+  title: { default: siteTitle, template: `%s | ${siteTitle}` },
   description: siteDescription,
 };
 

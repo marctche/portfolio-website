@@ -26,16 +26,6 @@ export default function About() {
               ))}
             </div>
           </div>
-          <div className="about-facts bleed">
-            <div className="about-facts-list">
-              {about.facts.map((f) => (
-                <div key={f.k}>
-                  <div className="k">{f.k}</div>
-                  <div className="v">{f.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
         </section>
       </main>
       <BlueFooter

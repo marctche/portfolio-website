@@ -20,8 +20,8 @@ export default function Experience() {
         <section className="section">
           <BackLink href="/" label="home" />
           <SectionHead {...pages.experience} />
-          {/* Opens on the Accenture pro bono work, so it's on screen as soon as the page loads. */}
-          <ExperienceIndex groups={groups} initial={experience.proBono[0].name} />
+          {/* Opens on BDO Canada (the current work), so it's on screen as soon as the page loads. */}
+          <ExperienceIndex groups={groups} initial={experience.work[0].name} />
         </section>
       </main>
     </>
